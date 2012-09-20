@@ -1,0 +1,32 @@
+package com.training.airplane.custom;
+
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.mule.api.transformer.TransformerException;
+import org.mule.transformer.AbstractTransformer;
+
+public class CustomTransformer extends AbstractTransformer {
+	@Override
+	protected Object doTransform(Object src, String encoding) throws
+	TransformerException
+	{
+	Booking aBooking = (Booking) src;
+	
+	
+	
+	return "Dear "+aBooking.passengerName
+	+"We would like to inform you that "
+	+"your seat on Flight"
+	+aBooking.FlightNumber+" leaving "
+	+aBooking.OriginAirport+" on "
+	+aBooking.DepartureDate+" at "
+	+aBooking.DepartureTime+" is confirmed.“;
+}
+
+	private List<String> sortList(CopyOnWriteArrayList<String> myList) {
+		ArrayList<String> mylist2 = new ArrayList<String>(myList);
+		Collections.sort(mylist2);
+		return mylist2;
+	}
+
+}

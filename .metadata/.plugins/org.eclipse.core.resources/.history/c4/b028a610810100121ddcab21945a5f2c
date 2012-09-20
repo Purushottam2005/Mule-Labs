@@ -1,0 +1,25 @@
+package com.mulesoft.training;
+
+import static org.junit.Assert.*;
+import org.junit.Test;
+import org.mule.api.MuleException;
+org.mule.api.MuleMessage;
+org.mule.api.client.MuleClient;
+org.mule.tck.junit4.FunctionalTestCase;
+public class TestNegate extends FunctionalTestCase {
+@Test
+public void testNegate1() throws MuleException {
+MuleClient client = muleContext.getClient();
+Integer inte = new Integer(5);
+MuleMessage reply = client.send ("vm://Math", inte,
+null, 5000);
+assertNotNull(reply);
+assertNotNull(reply.getPayload());
+assertTrue(reply.getPayload() instanceof Integer);
+Integer result = (Integer)reply.getPayload();
+assertEquals(result.intValue(),-25);
+}
+@Override
+protected String getConfigResources() {
+// TODO Auto-generated method stub
+return "src/main/app/math.xml";

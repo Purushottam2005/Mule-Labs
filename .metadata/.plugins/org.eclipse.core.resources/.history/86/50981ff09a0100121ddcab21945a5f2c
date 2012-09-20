@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.3.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd 
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd ">
+    <flow name="3-routingFlow1" doc:name="3-routingFlow1">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" doc:name="HTTP"/>
+        <logger level="INFO" doc:name="Logger"/>
+        <choice doc:name="Choice">
+            <when expression="inbound:http.method=POST">
+                <processor-chain>
+                    <all doc:name="All">
+                        <processor-chain>
+                            <vm:outbound-endpoint exchange-pattern="request-response" path="deltaQueue" doc:name="DELTA"/>
+                            <append-string-transformer message="delta" doc:name="Append String"/>
+                        </processor-chain>
+                        <processor-chain>
+                            <vm:outbound-endpoint exchange-pattern="request-response" path="sasQueue" doc:name="SAS"/>
+                            <append-string-transformer message="sas" doc:name="Append String"/>
+                        </processor-chain>
+                        <processor-chain>
+                            <vm:outbound-endpoint exchange-pattern="request-response" path="klmQueue" doc:name="KLM"/>
+                            <append-string-transformer message="klm" doc:name="Append String"/>
+                        </processor-chain>
+                    </all>
+                </processor-chain>
+            </when>
+            <when expression="inbound:http.method=GET">
+                <processor-chain>
+                    <parse-template location="Form.html" doc:name="Parse Template"/>
+                </processor-chain>
+            </when>
+        </choice>
+        <logger level="ERROR" category="LogBefore:" doc:name="Logger"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <logger level="ERROR" category="LogAfter:::::" doc:name="Logger"/>
+    </flow>
+    <flow name="deltaFlow" doc:name="deltaFlow">
+        <vm:inbound-endpoint exchange-pattern="request-response" path="deltaQueue" doc:name="VM"/>
+        <component class="com.training.airplane.PriceComponentDELTA" doc:name=""/>
+    </flow>
+    <flow name="sasFlow" doc:name="sasFlow">
+        <vm:inbound-endpoint exchange-pattern="request-response" path="sasQueue" doc:name="VM"/>
+        <component class="com.training.airplane.PriceComponentSAS" doc:name="Java"/>
+    </flow>
+    <flow name="klmFlow" doc:name="klmFlow">
+        <vm:inbound-endpoint exchange-pattern="request-response" path="klmQueue" doc:name="VM"/>
+        <component class="com.training.airplane.PriceComponentKLM" doc:name="Java"/>
+    </flow>
+</mule>

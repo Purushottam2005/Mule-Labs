@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="MyProject">
+    <flow SubFlow="false" name="MyProjectFlow1" entity-id="b30b441f-2d6f-41a6-be93-99c3938eb930">
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="d1951b9b-3e7e-4d80-9874-551fef473c32">
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/https/endpoint" name="HTTP" entity-id="edea9580-3b24-479e-a7bc-f2abfb76a85e">
+                <properties>
+                    <property value="request-response" name="exchange-pattern"/>
+                </properties>
+            </endpoint>
+            <pattern type="http://www.mulesoft.org/schema/mule/core/component" name="Java" entity-id="28a0abd1-11ff-4f85-9b00-41585427c695">
+                <properties>
+                    <property value="" name="ref"/>
+                    <property value="com.mulesoft.training.PriceComponent" name="class"/>
+                    <property name="updated"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/core/refInterceptorStackType;17948786">
+                        <property value="" name="ref"/>
+                    </property-collection>
+                </properties>
+                <description></description>
+            </pattern>
+            <pattern type="http://www.mulesoft.org/schema/mule/core/append-string-transformer" name="Append String" entity-id="0706cc78-98b8-439f-b889-b7951a68846f">
+                <properties>
+                    <property value="true" name="auxiliary;erased;mimeType"/>
+                    <property value="United" name="message"/>
+                    <property value="" name="returnClass"/>
+                    <property value="false" name="ignoreBadInput"/>
+                    <property value="true" name="auxiliary;erased;encoding"/>
+                    <property value="" name="encoding"/>
+                    <property value="" name="mimeType"/>
+                    <property name="updated"/>
+                </properties>
+                <description></description>
+            </pattern>
+        </lane>
+    </flow>
+    <description></description>
+</mule-configuration>

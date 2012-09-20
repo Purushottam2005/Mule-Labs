@@ -1,0 +1,27 @@
+package com.training.airplane.custom;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.mule.api.transformer.TransformerException;
+import org.mule.transformer.AbstractMessageAwareTransformer;
+import org.mule.transformer.AbstractMessageTransformer;
+import org.mule.transformer.AbstractTransformer;
+
+public class SavePayloadTransformer extends AbstractMessageTransformer {
+	@Override
+	protected Object doTransform(Object src, String encoding)
+			throws TransformerException {
+		CopyOnWriteArrayList<String> priceList = (CopyOnWriteArrayList<String>) src;
+		return sortList(priceList);
+	}
+
+	private List<String> sortList(CopyOnWriteArrayList<String> myList) {
+		ArrayList<String> mylist2 = new ArrayList<String>(myList);
+		Collections.sort(mylist2);
+		return mylist2;
+	}
+
+}

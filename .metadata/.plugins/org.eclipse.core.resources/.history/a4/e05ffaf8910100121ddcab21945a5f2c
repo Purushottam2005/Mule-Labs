@@ -1,0 +1,19 @@
+package com.training.airplane;
+
+
+public class PriceComponent {
+
+	public String getPrice(String destination) {
+		if (destination != null && "/KLM".equalsIgnoreCase(destination.trim())) {
+			return "800";
+		} else if (destination != null && "/DELTA".equalsIgnoreCase(destination.trim())) {
+			return "600";
+			
+		} else if (destination != null && "/SAS".equalsIgnoreCase(destination.trim())) {
+			return "400";
+		} else {
+			return "This destination is not available";
+		}
+		
+	}
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc" xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+	xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.3.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/jdbc http://www.mulesoft.org/schema/mule/ee/jdbc/current/mule-jdbc-ee.xsd 
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd 
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd 
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd ">
+    <jms:activemq-connector name="jmsConnector" specification="1.1" brokerURL="vm://localhost" doc:name="Active MQ"/>
+    <jdbc-ee:derby-data-source name="Derby_Data_Source" url="jdbc:derby:memory:muleEmbeddedDB;create=true" transactionIsolation="UNSPECIFIED" doc:name="Derby Data Source"/>
+    <jdbc-ee:connector name="Database" validateConnections="true" queryTimeout="-1" pollingFrequency="0" doc:name="Database" dataSource-ref="Derby_Data_Source"/>
+    
+	<flow name="3-routingFlow1" doc:name="3-routingFlow1">
+		<http:inbound-endpoint exchange-pattern="request-response"
+			host="localhost" port="8081" doc:name="HTTP" path="form" />			
+		<choice doc:name="Choice">
+			<when expression="message.inboundProperties['http.method']=='POST'">
+				<processor-chain>
+					<logger level="INFO"  doc:name="Logger" />
+                    <http:body-to-parameter-map-transformer doc:name="Body to Parameter Map"/>
+                    <expression-transformer expression="message.payload['destination']" doc:name="Expression"/>
+                    <all doc:name="All">
+                        <processor-chain>
+                            <jms:outbound-endpoint exchange-pattern="request-response" queue="deltaQueue" connector-ref="jmsConnector" doc:name="JMS"/>
+                            <append-string-transformer message="delta" doc:name="Append String"/>
+                        </processor-chain>
+                        <processor-chain>
+                            <vm:outbound-endpoint exchange-pattern="request-response" path="sasQueue" doc:name="SAS"/>
+                            <append-string-transformer message="sas" doc:name="Append String"/>
+                        </processor-chain>
+                        <processor-chain>
+                            <vm:outbound-endpoint exchange-pattern="request-response" path="klmQueue" doc:name="KLM"/>
+                            <append-string-transformer message="klm" doc:name="Append String"/>
+                        </processor-chain>
+                    </all>
+					<logger level="ERROR" category="LogBefore:" doc:name="Logger" />
+					<object-to-string-transformer
+						doc:name="Object to String" />
+					<logger level="ERROR" category="LogAfter:::::" doc:name="Logger" />
+
+				</processor-chain>
+			</when>
+			<when expression="message.inboundProperties['http.method']=='GET'">
+				<processor-chain>
+					<parse-template location="form.html" doc:name="Parse Template" />
+					<http:response-builder status="200"
+						contentType="text/html" doc:name="HTTP Response Builder" />
+				</processor-chain>
+			</when>
+		</choice>
+	</flow>
+	<flow name="deltaFlow" doc:name="deltaFlow">
+		<jms:inbound-endpoint queue="deltaQueue" connector-ref="jmsConnector" doc:name="JMS"/>
+        <jdbc-ee:outbound-endpoint exchange-pattern="one-way" queryTimeout="-1" doc:name="Database" connector-ref=""/>
+	</flow>
+	<flow name="sasFlow" doc:name="sasFlow">
+		<vm:inbound-endpoint exchange-pattern="request-response"
+			path="sasQueue" doc:name="VM" />
+		<component class="com.training.airplane.PriceComponentSAS"
+			doc:name="Java" />
+	</flow>
+	<flow name="klmFlow" doc:name="klmFlow">
+		<vm:inbound-endpoint exchange-pattern="request-response"
+			path="klmQueue" doc:name="VM" />
+		<component class="com.training.airplane.PriceComponentKLM"
+			doc:name="Java" />
+	</flow>
+</mule>

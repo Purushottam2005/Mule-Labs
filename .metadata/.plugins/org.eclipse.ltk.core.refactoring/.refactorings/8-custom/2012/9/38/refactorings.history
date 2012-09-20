@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;CustomTransformer.java&apos; to &apos;8-custom/src/main/java/com.training.airplane.custom&apos;&#x0A;- Original project: &apos;8-custom&apos;&#x0A;- Destination element: &apos;8-custom/src/main/java/com.training.airplane.custom&apos;&#x0A;- Original element: &apos;com.training.airplane.custom.CustomTransformer.java&apos;" description="Copy compilation unit" destination="/src\/main\/java&lt;com.training.airplane.custom" element1="/src\/main\/java&lt;com.training.airplane.custom{CustomTransformer.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1348129237320" units="1" version="1.0"/>
+</session>
