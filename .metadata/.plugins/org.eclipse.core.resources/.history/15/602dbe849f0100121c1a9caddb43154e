@@ -1,8 +1,0 @@
-<html>
-	<body>
-		<form action="http://localhost:8080/ticketPrice" method="post">
-			Destination:<input type="text" name="destination" value="SFO"/><br/>
-			<input type="submit" />
-		</form>
-	</body>
-</html>

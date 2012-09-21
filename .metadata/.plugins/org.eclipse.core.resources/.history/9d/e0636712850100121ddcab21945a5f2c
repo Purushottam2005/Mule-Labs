@@ -1,9 +1,0 @@
-package com.mulesoft.training;
-
-
-public class Square {
-
-	public Integer getPrice(Integer value) {
-			return value * value;
-	}
-}

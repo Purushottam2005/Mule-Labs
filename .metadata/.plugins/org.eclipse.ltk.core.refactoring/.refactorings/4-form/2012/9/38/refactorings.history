@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename type &apos;com.mulesoft.training.NegateTest&apos; to &apos;FlowTest&apos;&#x0A;- Original project: &apos;4-form&apos;&#x0A;- Original element: &apos;com.mulesoft.training.NegateTest&apos;&#x0A;- Renamed element: &apos;com.mulesoft.training.FlowTest&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;NegateTest&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src\/test\/java&lt;com.mulesoft.training{NegateTest.java[NegateTest" matchStrategy="1" name="FlowTest" qualified="false" references="true" similarDeclarations="false" stamp="1348039045699" textual="false" version="1.0"/>
-</session>
