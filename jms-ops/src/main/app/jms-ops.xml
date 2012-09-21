@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.3.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd 
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd 
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd ">
+    <jms:activemq-connector name="jmsConnector" specification="1.1" brokerURL="tcp://localhost:61616" doc:name="Active MQ"/>    
+    <flow name="jms-opsFlow1" doc:name="jms-opsFlow1">
+        <jms:inbound-endpoint  queue="queueOps" doc:name="JMS" connector-ref="jmsConnector"/>
+        <logger level="INFO" doc:name="Logger"/>
+        <component class="com.training.ops.Sleep" doc:name="Java"/>
+        <jms:outbound-endpoint queue="queueOutput" doc:name="JMS" connector-ref="jmsConnector"/>
+    </flow>
+</mule>
