@@ -1,3 +1,5 @@
+.*
+!/.gitignore
 .metadata/**/*
 .mule
 10-datahandling/.settings
